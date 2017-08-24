@@ -1,0 +1,32 @@
+{
+  "name": "opflow-nodejs-sample",
+  "version": "0.1.1",
+  "description": "Opflow for Nodejs sample application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/opflow/opflow-nodejs-sample.git"
+  },
+  "keywords": [
+    "opflow",
+    "amqplib"
+  ],
+  "author": "devebot",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/opflow/opflow-nodejs-sample/issues"
+  },
+  "homepage": "https://github.com/opflow/opflow-nodejs-sample#readme",
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "lodash": "^4.17.4",
+    "opflow": "^0.1.1"
+  },
+  "devDependencies": {
+    "chai": "^4.1.1",
+    "mocha": "^3.5.0"
+  }
+}
