@@ -48,3 +48,8 @@ Publisher (Pub/sub client):
 DEBUG=fibonacci* node lib/publisher.js
 ```
 
+## Launch Server
+
+```shell
+DEBUG=fibonacci* node server.js
+```
