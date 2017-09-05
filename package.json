@@ -23,7 +23,7 @@
   "dependencies": {
     "bluebird": "^3.5.0",
     "lodash": "^4.17.4",
-    "opflow": "^0.1.1"
+    "opflow": "0.1.2"
   },
   "devDependencies": {
     "chai": "^4.1.1",
