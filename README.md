@@ -22,7 +22,7 @@ Install `npm` dependencies:
 npm install
 ```
 
-## Run individual examples
+## Individual examples
 
 RPC worker (server):
 
@@ -52,4 +52,10 @@ DEBUG=fibonacci* node lib/publisher.js
 
 ```shell
 DEBUG=fibonacci* node server.js
+```
+
+## Execute command line
+
+```shell
+DEBUG=fibonacci* node index.js request -n 40
 ```
