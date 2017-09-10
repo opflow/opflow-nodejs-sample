@@ -37,8 +37,8 @@ var Server = function() {
       routingKey: 'opflow-fibonacci-rpc',
       operatorName: 'opflow-fibonacci-operator',
       responseName: 'opflow-fibonacci-response',
-      handlers: [{
-        routine: 'fibonacci',
+      mappings: [{
+        routineId: 'fibonacci',
         handler: function(body, headers, response) {
           var requestId = headers.requestId;
 
@@ -102,5 +102,7 @@ if (require.main === module) {
   var server = new Server();
   server.start().then(function(results) {
     console.log('Server is running. CTRL+C to exit!');
+  }).catch(function(errors) {
+    server.stop();
   });
 }
