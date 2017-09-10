@@ -54,8 +54,8 @@ DEBUG=fibonacci* node lib/publisher.js
 DEBUG=fibonacci* node server.js
 ```
 
-## Execute command line
+## Execute client
 
 ```shell
-DEBUG=fibonacci* node index.js request -n 40
+DEBUG=fibonacci* node client.js request -n 40
 ```

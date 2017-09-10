@@ -2,7 +2,7 @@
   "name": "opflow-nodejs-sample",
   "version": "0.1.3",
   "description": "Opflow for Nodejs sample application",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
