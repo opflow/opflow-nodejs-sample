@@ -2,12 +2,56 @@
 
 var Promise = require('bluebird');
 var lodash = require('lodash');
+var opflow = require('opflow');
 var program = require('commander');
 var util = require('util');
 var debugx = require('debug')('fibonacci:cmdline');
-var FibonacciServer = require('./server');
-var FibonacciPublisher = require('./lib/publisher');
-var FibonacciRpcMaster = require('./lib/rpc_master');
+
+var Client = function() {
+
+  var publisher = new opflow.PubsubHandler({
+    uri: process.env.OPFLOW_LAB_URI || 'amqp://localhost',
+    exchangeName: 'opflow-fibonacci-publisher',
+    routingKey: 'opflow-fibonacci-pubsub-public',
+    applicationId: 'FibonacciGenerator',
+    autoinit: false
+  });
+
+  var rpcMaster = new opflow.RpcMaster({
+    uri: process.env.OPFLOW_LAB_URI || 'amqp://localhost',
+    exchangeName: 'opflow-fibonacci-exchange',
+    routingKey: 'opflow-fibonacci-rpc',
+    applicationId: 'FibonacciGenerator',
+    autoinit: false
+  });
+
+  this.ready = function() {
+    return Promise.all([ publisher.ready(), rpcMaster.ready() ]);
+  }
+
+  this.request = function(number, timeout) {
+    return rpcMaster.request('fibonacci', {
+      number: number
+    }, {
+      timeout: timeout
+    });
+  }
+
+  this.publish = function(number) {
+    return publisher.publish({ number: number });
+  }
+
+  this.setting = function(numberMax) {
+    return publisher.publish({ numberMax: numberMax }, {}, 
+      'opflow-fibonacci-configurer');
+  }
+
+  this.close = function() {
+    return Promise.all([ publisher.close(), rpcMaster.close() ]);
+  }
+}
+
+var client = new Client();
 
 var interactCommands = function(commands) {
   return new Promise(function(onResolved, onRejected) {
@@ -58,11 +102,6 @@ var interactCommands = function(commands) {
 }
 
 var commands = [{
-  name: 'service',
-  alias: 'server',
-  description: 'Launch the service.',
-  options: []
-}, {
   name: 'request',
   description: 'RPC request to calculate fibonacci',
   options: [{
@@ -91,38 +130,19 @@ var commands = [{
 interactCommands(commands).then(function(input) {
   console.log('INPUT: %s', JSON.stringify(input));
   switch(input.name) {
-    case 'service':
-      var server = new FibonacciServer();
-      server.start().then(function(results) {
-        console.log('Server is running. CTRL+C to exit!');
-      });
-      break;
     case 'setting':
       if (input.options && input.options['numberMax']) {
-        var publisher = new FibonacciPublisher({
-          uri: process.env.OPFLOW_LAB_URI || 'amqp://localhost',
-          exchangeName: 'opflow-fibonacci-publisher',
-          routingKey: 'opflow-fibonacci-configurer',
-          autoinit: false
-        });
-        publisher.ready().then(function() {
-          return publisher.setting(input.options['numberMax']);
+        client.ready().then(function() {
+          return client.setting(input.options['numberMax']);
         }).then(function() {
-          return publisher.close();
+          return client.close();
         });
       }
       break;
     case 'request':
       if (!input.options || !input.options['number']) break;
-      var master = new FibonacciRpcMaster({
-        uri: process.env.OPFLOW_LAB_URI || 'amqp://localhost',
-        exchangeName: 'opflow-fibonacci-exchange',
-        routingKey: 'opflow-fibonacci-rpc',
-        applicationId: 'FibonacciGenerator',
-        autoinit: false
-      });
-      master.ready().then(function() {
-        return master.request(input.options['number'], 5000);
+      client.ready().then(function() {
+        return client.request(input.options['number'], 5000);
       }).then(function(task) {
         return task.extractResult();
       }).then(function(result) {
@@ -140,7 +160,7 @@ interactCommands(commands).then(function(input) {
         }
         return true;
       }).then(function() {
-        return master.close();
+        return client.close();
       })
       break;
   }

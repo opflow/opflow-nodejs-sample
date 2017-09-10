@@ -1,0 +1,12 @@
+{
+  "apps": [{
+    "name": "opflow-nodejs-sample",
+    "script": "server.js",
+    "instances": 2,
+    "watch": true,
+    "env": {
+      "OPFLOW_CONLOG": "true",
+      "DEBUG": "fibonacci*"
+    }
+  }]
+}
