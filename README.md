@@ -30,6 +30,7 @@ Install rabbitmq-server package:
 
 ```shell
 sudo apt-get install rabbitmq-server
+```
 
 
 ## Installation
