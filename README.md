@@ -2,6 +2,36 @@
 
 > Opflow for Nodejs sample application
 
+## Prerequisites
+
+### Install Rabbitmq on Ubuntu
+
+Add the APT repository to your `/etc/apt/sources.list.d`:
+
+```shell
+echo 'deb http://www.rabbitmq.com/debian/ testing main' |
+     sudo tee /etc/apt/sources.list.d/rabbitmq.list
+```
+
+Add Rabbitmq public key to our trusted key list using `apt-key`:
+
+```shell
+wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc |
+     sudo apt-key add -
+```
+
+Update the package list:
+
+```shell
+sudo apt-get update
+```
+
+Install rabbitmq-server package:
+
+```shell
+sudo apt-get install rabbitmq-server
+
+
 ## Installation
 
 Clone source code from github:
