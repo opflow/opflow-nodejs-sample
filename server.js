@@ -74,7 +74,7 @@ var Server = function() {
       routingKey: 'opflow-fibonacci-pubsub-public',
       subscriberName: 'opflow-fibonacci-subscriber',
       recyclebinName: 'opflow-fibonacci-recyclebin',
-      consumers: 4,
+      consumerTotal: 2,
       handler: function(body, headers, finish) {
         debugx.enabled && debugx('Message: %s', body.toString());
         body = JSON.parse(body.toString());
