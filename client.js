@@ -33,7 +33,8 @@ var Client = function() {
     return rpcMaster.request('fibonacci', {
       number: number
     }, {
-      timeout: timeout
+      timeout: timeout,
+      progressEnabled: false
     });
   }
 

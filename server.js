@@ -10,7 +10,7 @@ var numberMax = 50;
 
 console.log('[+] FibonacciServer example');
 
-var server = new opflow.Serverlet({
+var promise = opflow.Loader.instance.createServerlet({
   configurer: function(body, headers, finish) {
     debugx.enabled && debugx('Message: %s', body.toString());
     body = JSON.parse(body.toString());
@@ -70,31 +70,8 @@ var server = new opflow.Serverlet({
 
     finish();
   }
-}, {
-  uri: process.env.OPFLOW_LAB_URI || 'amqp://localhost',
-  applicationId: 'FibonacciGenerator',
-  configurer: {
-    exchangeName: 'opflow-fibonacci-publisher',
-    routingKey: 'opflow-fibonacci-configurer'
-  },
-  rpcWorker: {
-    exchangeName: 'opflow-fibonacci-exchange',
-    routingKey: 'opflow-fibonacci-rpc',
-    operatorName: 'opflow-fibonacci-operator',
-    responseName: 'opflow-fibonacci-response'
-  },
-  subscriber: {
-    exchangeName: 'opflow-fibonacci-publisher',
-    routingKey: 'opflow-fibonacci-pubsub-public',
-    subscriberName: 'opflow-fibonacci-subscriber',
-    recyclebinName: 'opflow-fibonacci-recyclebin',
-    consumerTotal: 2,
-    enabled: false
-  }
 });
 
-server.ready().then(function(results) {
+promise.then(function(server) {
   console.log('Server is running. CTRL+C to exit!');
-}).catch(function(errors) {
-  server.close();
 });
